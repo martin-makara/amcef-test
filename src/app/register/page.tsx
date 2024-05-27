@@ -8,20 +8,32 @@ type Inputs = {
 	password: string;
 };
 
-export default function Form() {
+export default function Register() {
 	const {
 		register,
 		formState: { errors },
 		handleSubmit,
 	} = useForm<Inputs>();
 	const onSubmit: SubmitHandler<Inputs> = (data) => {
-		console.log(data);
+		fetch("/register/api/", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(data),
+		})
+			.then((response) => response.json())
+			.then((data) => console.log(data))
+			.catch((error) => console.error(error));
 	};
 
 	return (
 		<form className="menu" onSubmit={handleSubmit(onSubmit)}>
 			<div className="flex">
-				<label className="input input-bordered flex items-center gap-2">
+				<label
+					className="input input-bordered flex items-center gap-2"
+					style={errors.mail ? { borderColor: "red" } : {}}
+				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						viewBox="0 0 16 16"
@@ -42,10 +54,13 @@ export default function Form() {
 						})}
 					/>
 				</label>
-				<button style={{ alignSelf: "flex-start" }}>*</button>
+				<button style={{ alignSelf: "center" }}>* - required</button>
 			</div>
 			<div className="flex">
-				<label className="input input-bordered flex items-center gap-2">
+				<label
+					className="input input-bordered flex items-center gap-2"
+					style={errors.name ? { borderColor: "red" } : {}}
+				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						viewBox="0 0 16 16"
@@ -89,9 +104,7 @@ export default function Form() {
 				</label>
 				<button style={{ alignSelf: "flex-start" }}>*</button>
 			</div>
-			{(errors.mail || errors.name || errors.password) && (
-				<span>These fields is required!</span>
-			)}
+			{(errors.mail || errors.name || errors.password) && <span>These fields is required!</span>}
 			<input className="input" type="submit" />
 		</form>
 	);

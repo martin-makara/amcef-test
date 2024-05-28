@@ -1,5 +1,4 @@
 import Image from "next/image";
-import RegisterPage from "./register/page";
 import Link from "next/link";
 
 export default function Home() {

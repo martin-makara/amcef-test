@@ -1,11 +1,13 @@
-"use client";
-
+"use server";
+import { redirect } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 type Inputs = {
+	createdAt: string;
 	name: string;
 	mail: string;
 	password: string;
+	token: string;
 };
 
 export default function Register() {
@@ -14,8 +16,13 @@ export default function Register() {
 		formState: { errors },
 		handleSubmit,
 	} = useForm<Inputs>();
-	const onSubmit: SubmitHandler<Inputs> = (data) => {
-		fetch("/register/api/", {
+
+	const date = new Date();
+
+	const getUserUrl = new URL("https://6653697c1c6af63f4674a111.mockapi.io/api/users");
+
+	const registerUser = (data: Inputs) => {
+		fetch("https://6653697c1c6af63f4674a111.mockapi.io/api/users", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -23,13 +30,38 @@ export default function Register() {
 			body: JSON.stringify(data),
 		})
 			.then((response) => response.json())
-			.then((data) => console.log(data))
+			.catch((error) => console.error(error))
+			.finally(() => {
+				alert("You have successfully registered!");
+				redirect("/login");
+			});
+	};
+
+	const onSubmit: SubmitHandler<Inputs> = (data) => {
+		data.createdAt = date.toLocaleString();
+		data.token = "";
+		getUserUrl.searchParams.set("mail", data.mail);
+
+		fetch(getUserUrl, {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		})
+			.then((response: Response) => {
+				if (response.status === 404) {
+					registerUser(data);
+				} else if (response.status === 200) {
+					alert("This email is already registered!");
+				}
+			})
 			.catch((error) => console.error(error));
 	};
 
 	return (
-		<form className="menu" onSubmit={handleSubmit(onSubmit)}>
-			<div className="flex">
+		<div>
+			<h1>Regsiter</h1>
+			<form className="menu" onSubmit={handleSubmit(onSubmit)}>
 				<label
 					className="input input-bordered flex items-center gap-2"
 					style={errors.mail ? { borderColor: "red" } : {}}
@@ -54,9 +86,6 @@ export default function Register() {
 						})}
 					/>
 				</label>
-				<button style={{ alignSelf: "center" }}>* - required</button>
-			</div>
-			<div className="flex">
 				<label
 					className="input input-bordered flex items-center gap-2"
 					style={errors.name ? { borderColor: "red" } : {}}
@@ -76,9 +105,6 @@ export default function Register() {
 						{...register("name", { required: true, minLength: 3 })}
 					/>
 				</label>
-				<button style={{ alignSelf: "flex-start" }}>*</button>
-			</div>
-			<div className="flex">
 				<label
 					className="input input-bordered flex items-center gap-2"
 					style={errors.password ? { borderColor: "red" } : {}}
@@ -102,10 +128,9 @@ export default function Register() {
 						{...register("password", { required: true, minLength: 8 })}
 					/>
 				</label>
-				<button style={{ alignSelf: "flex-start" }}>*</button>
-			</div>
-			{(errors.mail || errors.name || errors.password) && <span>These fields is required!</span>}
-			<input className="input" type="submit" />
-		</form>
+				{(errors.mail || errors.name || errors.password) && <span>These fields is required!</span>}
+				<input className="input" type="submit" />
+			</form>
+		</div>
 	);
 }

@@ -1,73 +1,62 @@
 "use client";
-
-import { redirect } from "next/navigation";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { getWithExpiry, setWithExpiry } from "../components/functions";
 
 type Inputs = {
 	mail: string;
 	password: string;
-	token: string;
 };
 
 export default function Login() {
+	const router = useRouter();
 	const {
 		register,
 		formState: { errors },
 		handleSubmit,
 	} = useForm<Inputs>();
 
-	const onSubmit: SubmitHandler<Inputs> = (data) => {
-		data.token = "";
+	const getUserUrl = new URL("https://6653697c1c6af63f4674a111.mockapi.io/api/users");
 
-		fetch("https://6653697c1c6af63f4674a111.mockapi.io/api/users", {
+	const loginUser = (id: string) => {
+		setWithExpiry("user", id, 2592000000);
+		router.push("/");
+	};
+
+	const onSubmit: SubmitHandler<Inputs> = (data) => {
+		getUserUrl.searchParams.set("mail", data.mail);
+		getUserUrl.searchParams.set("password", data.password);
+
+		fetch(getUserUrl, {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
 			},
 		})
 			.then((response) => response.json())
-			.then((response) => {
-				if (response.length > 0) {
-					response.find((element: any) => {
-						if (element.mail === data.mail) {
-							alert("This email is already registered!");
-							return;
-						} else {
-							fetch("https://6653697c1c6af63f4674a111.mockapi.io/api/users", {
-								method: "POST",
-								headers: {
-									"Content-Type": "application/json",
-								},
-								body: JSON.stringify(data),
-							})
-								.then((response) => response.json())
-								.then((data) => console.log(data))
-								.catch((error) => console.error(error));
-						}
-					});
-				} else {
-					fetch("https://6653697c1c6af63f4674a111.mockapi.io/api/users", {
-						method: "POST",
-						headers: {
-							"Content-Type": "application/json",
-						},
-						body: JSON.stringify(data),
-					})
-						.then((response) => response.json())
-						.then((data) => {
-							console.log(data);
-							alert("You have successfully registered!");
-							redirect("/");
-						})
-						.catch((error) => console.error(error));
+			.then((response: any) => {
+				if (response.status === 404 || response.length === 0) {
+					alert("This email is not registered!");
+				} else if (response.status === 200 || response.length > 0) {
+					loginUser(response[0].id);
 				}
 			})
 			.catch((error) => console.error(error));
 	};
 
+	useEffect(() => {
+		getWithExpiry("user");
+		if (getWithExpiry("user")) {
+			router.push("/");
+		}
+	}, []);
+
 	return (
 		<div>
 			<h1>Login</h1>
+			<Link href="/register">Register</Link>
 			<form className="menu" onSubmit={handleSubmit(onSubmit)}>
 				<label
 					className="input input-bordered flex items-center gap-2"

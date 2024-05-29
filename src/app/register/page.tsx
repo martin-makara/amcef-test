@@ -1,16 +1,19 @@
 "use client";
-import { redirect } from "next/navigation";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { getWithExpiry } from "../components/functions";
 
 type Inputs = {
 	createdAt: string;
 	name: string;
 	mail: string;
 	password: string;
-	token: string;
 };
 
 export default function Register() {
+	const router = useRouter();
 	const {
 		register,
 		formState: { errors },
@@ -18,7 +21,6 @@ export default function Register() {
 	} = useForm<Inputs>();
 
 	const date = new Date();
-
 	const getUserUrl = new URL("https://6653697c1c6af63f4674a111.mockapi.io/api/users");
 
 	const registerUser = (data: Inputs) => {
@@ -33,13 +35,12 @@ export default function Register() {
 			.catch((error) => console.error(error))
 			.finally(() => {
 				alert("You have successfully registered!");
-				redirect("/login");
+				router.push("/login");
 			});
 	};
 
 	const onSubmit: SubmitHandler<Inputs> = (data) => {
 		data.createdAt = date.toLocaleString();
-		data.token = "";
 		getUserUrl.searchParams.set("mail", data.mail);
 
 		fetch(getUserUrl, {
@@ -48,19 +49,28 @@ export default function Register() {
 				"Content-Type": "application/json",
 			},
 		})
-			.then((response: Response) => {
-				if (response.status === 404) {
+			.then((response) => response.json())
+			.then((response: any) => {
+				if (response.status === 404 || response.length === 0) {
 					registerUser(data);
-				} else if (response.status === 200) {
+				} else if (response.status === 200 || response.length > 0) {
 					alert("This email is already registered!");
 				}
 			})
 			.catch((error) => console.error(error));
 	};
 
+	useEffect(() => {
+		getWithExpiry("user");
+		if (getWithExpiry("user")) {
+			router.push("/");
+		}
+	}, []);
+
 	return (
 		<div>
 			<h1>Regsiter</h1>
+			<Link href="/login">Login</Link>
 			<form className="menu" onSubmit={handleSubmit(onSubmit)}>
 				<label
 					className="input input-bordered flex items-center gap-2"

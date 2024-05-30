@@ -43,7 +43,7 @@ export default function Todolist({ params }: { params: { todolist: string } }) {
 	};
 
 	const logout = () => {
-		if (global?.window !== undefined) {
+		if (typeof window === "undefined") {
 			localStorage.removeItem("user");
 		}
 		setLoading(true);

@@ -33,7 +33,7 @@ export default function App() {
 	};
 
 	const logout = () => {
-		if (global?.window !== undefined) {
+		if (typeof window === "undefined") {
 			localStorage.removeItem("user");
 		}
 		setLoading(true);

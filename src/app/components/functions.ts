@@ -1,4 +1,9 @@
+"use client";
 export const getItem = (key: string) => {
+	if (typeof window === "undefined") {
+		return null;
+	}
+
 	const itemStr = localStorage.getItem(key);
 	// if the item doesn't exist, return null
 	if (!itemStr) {
@@ -17,6 +22,10 @@ export const getItem = (key: string) => {
 };
 
 export const setWithExpiry = (key: string, value: string, ttl: number) => {
+	if (typeof window === "undefined") {
+		return;
+	}
+
 	const now = new Date();
 
 	// `item` is an object which contains the original value

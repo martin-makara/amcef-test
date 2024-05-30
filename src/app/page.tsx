@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { getItem, removeItem } from "./components/functions";
+import { getItem } from "./components/functions";
 
 type FormValues = {
 	title: string;
@@ -33,7 +33,7 @@ export default function App() {
 	};
 
 	const logout = () => {
-		removeItem("user");
+		localStorage.removeItem("user");
 		setLoading(true);
 		router.push("/login");
 	};

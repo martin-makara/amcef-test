@@ -27,11 +27,3 @@ export const setWithExpiry = (key: string, value: string, ttl: number) => {
 	};
 	localStorage.setItem(key, JSON.stringify(item));
 };
-
-export const removeItem = (key: string) => {
-	const item = window?.localStorage?.getItem(key);
-	if (item) {
-		window.localStorage.removeItem(key);
-	}
-	return item ? JSON.parse(item) : null;
-};

@@ -128,14 +128,7 @@ export default function Todolist({ params }: { params: { todolist: string } }) {
 					</div>
 					<h1 className="w-full text-center text-4xl">Todo List</h1>
 					<div className="flex justify-end w-full">
-						<button
-							className="btn btn-primary"
-							onClick={() => {
-								removeItem("user");
-								setLoading(true);
-								router.push("/login");
-							}}
-						>
+						<button className="btn btn-primary" onClick={() => logout()}>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								width="20"

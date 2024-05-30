@@ -29,5 +29,5 @@ export const setWithExpiry = (key: string, value: string, ttl: number) => {
 };
 
 export const removeItem = (key: string) => {
-	localStorage.removeItem(key);
+	window?.localStorage?.removeItem(key) ? JSON.parse(localStorage.removeItem(key)) : null;
 };

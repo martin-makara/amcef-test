@@ -1,4 +1,3 @@
-"use client";
 export const getItem = (key: string) => {
 	if (typeof window === "undefined") {
 		return null;

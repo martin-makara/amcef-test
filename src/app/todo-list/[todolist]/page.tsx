@@ -6,7 +6,7 @@ import { set, useForm } from "react-hook-form";
 import { getWithExpiry } from "@/app/components/functions";
 
 type FormValues = {
-	createAt: string;
+	createdAt: string;
 	title: string;
 	deadline: string;
 	description: string;
@@ -25,7 +25,7 @@ export default function Todolist({ params }: { params: { todolist: string } }) {
 
 	const onSubmit = (data: FormValues) => {
 		const date = new Date();
-		data.createAt = date.toLocaleString();
+		data.createdAt = date.toLocaleString();
 		data.state = "0";
 
 		fetch(

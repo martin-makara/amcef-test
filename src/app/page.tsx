@@ -7,7 +7,7 @@ import { getWithExpiry } from "./components/functions";
 
 type FormValues = {
 	title: string;
-	createAt: string;
+	createdAt: string;
 };
 
 export default function App() {
@@ -22,7 +22,7 @@ export default function App() {
 
 	const onSubmit = (data: FormValues) => {
 		const date = new Date();
-		data.createAt = date.toLocaleString();
+		data.createdAt = date.toLocaleString();
 
 		fetch(`https://6653697c1c6af63f4674a111.mockapi.io/api/users/${getWithExpiry("user")}/todoLists`, {
 			method: "POST",

@@ -57,7 +57,7 @@ export default function Login() {
 		<main className="flex min-h-screen flex-col justify-between items-center p-8">
 			<div className="flex w-full justify-between items-center">
 				<div className="w-full"></div>
-				<h1 className="w-full text-center text-4xl">Todo List</h1>
+				<h1 className="w-full text-center text-4xl">Todo List123</h1>
 				<div className="text-end w-full">
 					<Link href="/register">Register</Link>
 				</div>

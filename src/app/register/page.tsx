@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { getWithExpiry } from "../components/functions";
+import { getItem } from "../components/functions";
 
 type Inputs = {
 	createdAt: string;
@@ -62,8 +62,8 @@ export default function Register() {
 	};
 
 	useEffect(() => {
-		getWithExpiry("user");
-		if (getWithExpiry("user")) {
+		getItem("user");
+		if (getItem("user")) {
 			router.push("/");
 		}
 	}, []);

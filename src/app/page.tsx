@@ -33,7 +33,9 @@ export default function App() {
 	};
 
 	const logout = () => {
-		localStorage.removeItem("user");
+		if (typeof window !== "undefined") {
+			localStorage.removeItem("user");
+		}
 		setLoading(true);
 		router.push("/login");
 	};

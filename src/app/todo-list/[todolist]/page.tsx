@@ -43,7 +43,9 @@ export default function Todolist({ params }: { params: { todolist: string } }) {
 	};
 
 	const logout = () => {
-		localStorage.removeItem("user");
+		if (typeof window !== "undefined") {
+			localStorage.removeItem("user");
+		}
 		setLoading(true);
 		router.push("/login");
 	};

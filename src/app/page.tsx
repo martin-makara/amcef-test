@@ -106,8 +106,8 @@ export default function App() {
 				<div className="flex flex-col w-1/2 mt-20">
 					<div className="overflow-x-auto">
 						<table className="table">
-							<thead className="bg-base-300">
-								<tr className="bg-base-300">
+							<thead>
+								<tr className="bg-neutral">
 									<th></th>
 									<th>Name</th>
 									<th>Created At</th>
@@ -163,7 +163,7 @@ export default function App() {
 					</div>
 				</div>
 				<dialog id="my_modal" className="modal">
-					<div className="modal-box bg-base-100">
+					<div className="modal-box">
 						<form method="dialog">
 							<button className="btn btn-sm btn-circle btn-ghost absolute right-4 top-4">✕</button>
 						</form>
@@ -171,7 +171,7 @@ export default function App() {
 						<form onSubmit={handleSubmit(onSubmit)}>
 							<input
 								{...register("title", { required: true })}
-								className={"input input-bordered w-full bg-base-100" + (errors.title ? " border-error" : "")}
+								className={"input input-bordered w-full" + (errors.title ? " border-error" : "")}
 								type="text"
 								placeholder="Title"
 							/>

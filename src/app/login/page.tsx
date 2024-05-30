@@ -63,7 +63,11 @@ export default function Login() {
 				</div>
 			</div>
 			<form className="menu" onSubmit={handleSubmit(onSubmit)}>
-				<label className={"input input-bordered flex items-center gap-2 mb-2" + (errors.mail ? " border-error" : "")}>
+				<label
+					className={
+						"input input-bordered flex items-center gap-2 mb-2 bg-base-100" + (errors.mail ? " border-error" : "")
+					}
+				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						viewBox="0 0 16 16"
@@ -85,7 +89,9 @@ export default function Login() {
 					/>
 				</label>
 				<label
-					className={"input input-bordered flex items-center gap-2 mb-2" + (errors.password ? " border-error" : "")}
+					className={
+						"input input-bordered flex items-center gap-2 mb-2 bg-base-100" + (errors.password ? " border-error" : "")
+					}
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"

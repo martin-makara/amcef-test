@@ -107,7 +107,7 @@ export default function App() {
 					<div className="overflow-x-auto">
 						<table className="table">
 							<thead>
-								<tr>
+								<tr className="bg-base-300">
 									<th></th>
 									<th>Name</th>
 									<th>Created At</th>
@@ -163,7 +163,7 @@ export default function App() {
 					</div>
 				</div>
 				<dialog id="my_modal" className="modal">
-					<div className="modal-box">
+					<div className="modal-box bg-base-100">
 						<form method="dialog">
 							<button className="btn btn-sm btn-circle btn-ghost absolute right-4 top-4">✕</button>
 						</form>
@@ -171,7 +171,7 @@ export default function App() {
 						<form onSubmit={handleSubmit(onSubmit)}>
 							<input
 								{...register("title", { required: true })}
-								className={"input input-bordered w-full" + (errors.title ? " border-error" : "")}
+								className={"input input-bordered w-full bg-base-100" + (errors.title ? " border-error" : "")}
 								type="text"
 								placeholder="Title"
 							/>
@@ -180,19 +180,7 @@ export default function App() {
 									type="submit"
 									className="btn"
 									onClick={() =>
-										errors.title
-											? () => {
-													const alertElement = document.getElementById("alert");
-													if (alertElement) {
-														alertElement.classList.remove("opacity-0");
-														alertElement.classList.add("z-50");
-														alertElement.classList.add("opacity-100");
-														setTimeout(() => alertElement.classList.remove("opacity-100"), 2000);
-														setTimeout(() => alertElement.classList.add("-z-50"), 2000);
-														setTimeout(() => alertElement.classList.add("opacity-0"), 2000);
-													}
-											  }
-											: () => (document.getElementById("my_modal") as HTMLDialogElement)?.close()
+										errors.title ? () => {} : () => (document.getElementById("my_modal") as HTMLDialogElement)?.close()
 									}
 								>
 									Add
@@ -204,27 +192,6 @@ export default function App() {
 						<button>close</button>
 					</form>
 				</dialog>
-
-				<div
-					role="alert"
-					id="alert"
-					className="-z-50 opacity-0 w-auto alert alert-warning absolute top-2.5 left-2.5 duration-500 transition-opacity"
-				>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						className="stroke-current shrink-0 h-6 w-6"
-						fill="none"
-						viewBox="0 0 24 24"
-					>
-						<path
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							strokeWidth="2"
-							d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-						/>
-					</svg>
-					<span>Warning: Deadline is passed!</span>
-				</div>
 			</main>
 		);
 	}

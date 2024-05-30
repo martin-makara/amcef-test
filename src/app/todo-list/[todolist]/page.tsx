@@ -155,7 +155,7 @@ export default function Todolist({ params }: { params: { todolist: string } }) {
 						<form onSubmit={handleSubmit(onSubmit)} className="mt-2">
 							<table className="table">
 								<thead>
-									<tr>
+									<tr className="bg-base-100">
 										<th></th>
 										<th>Name</th>
 										<th>Description</th>
@@ -164,7 +164,7 @@ export default function Todolist({ params }: { params: { todolist: string } }) {
 									</tr>
 								</thead>
 								<tbody>
-									<tr className={"bg-base-300 hover"}>
+									<tr className="bg-base-300 hover">
 										<th></th>
 										<th>
 											<input

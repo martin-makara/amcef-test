@@ -21,6 +21,9 @@ export default function App() {
 	const [loading, setLoading] = useState<boolean>(true);
 
 	const onSubmit = (data: FormValues) => {
+		const date = new Date();
+		data.createAt = date.toLocaleString();
+
 		fetch(`https://6653697c1c6af63f4674a111.mockapi.io/api/users/${getWithExpiry("user")}/todoLists`, {
 			method: "POST",
 			headers: {

@@ -1,4 +1,4 @@
-export const getWithExpiry = (key: string) => {
+export const getItem = (key: string) => {
 	const itemStr = localStorage.getItem(key);
 	// if the item doesn't exist, return null
 	if (!itemStr) {
@@ -26,4 +26,8 @@ export const setWithExpiry = (key: string, value: string, ttl: number) => {
 		expiry: now.getTime() + ttl,
 	};
 	localStorage.setItem(key, JSON.stringify(item));
+};
+
+export const removeItem = (key: string) => {
+	localStorage.removeItem(key);
 };

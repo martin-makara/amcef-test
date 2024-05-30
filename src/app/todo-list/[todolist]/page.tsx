@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { getWithExpiry } from "@/app/components/functions";
+import { getItem, removeItem } from "@/app/components/functions";
 
 type FormValues = {
 	createdAt: string;
@@ -24,9 +24,7 @@ export default function Todolist({ params }: { params: { todolist: string } }) {
 	const [tmpTodoItems, setTmpTodoItems] = useState<any[]>([]); // Add type annotation for todos
 	const [loading, setLoading] = useState<boolean>(true);
 
-	const url = `https://6653697c1c6af63f4674a111.mockapi.io/api/users/${getWithExpiry("user")}/todoLists/${
-		params.todolist
-	}`;
+	const url = `https://6653697c1c6af63f4674a111.mockapi.io/api/users/${getItem("user")}/todoLists/${params.todolist}`;
 
 	const fetchTodoItems = () => {
 		fetch(`${url}/todoItems`)
@@ -45,7 +43,7 @@ export default function Todolist({ params }: { params: { todolist: string } }) {
 	};
 
 	const logout = () => {
-		localStorage.removeItem("user");
+		removeItem("user");
 		setLoading(true);
 		router.push("/login");
 	};
@@ -101,8 +99,8 @@ export default function Todolist({ params }: { params: { todolist: string } }) {
 		setTmpTodoItems(todoItems.filter((item) => item.state === "2"));
 	};
 	useEffect(() => {
-		getWithExpiry("user");
-		if (!getWithExpiry("user")) {
+		getItem("user");
+		if (!getItem("user")) {
 			router.push("/login");
 		}
 		fetchTodoItems();
@@ -121,7 +119,7 @@ export default function Todolist({ params }: { params: { todolist: string } }) {
 					<div className="breadcrumbs w-full">
 						<ul>
 							<li>
-								<Link href="/">Home123</Link>
+								<Link href="/">Home</Link>
 							</li>
 							<li>
 								<Link href="#">Todo list {params.todolist}</Link>

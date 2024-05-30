@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { getWithExpiry } from "./components/functions";
+import { getItem, removeItem } from "./components/functions";
 
 type FormValues = {
 	title: string;
@@ -20,7 +20,7 @@ export default function App() {
 	const [todos, setTodos] = useState<any[]>([]); // Add type annotation for todos
 	const [loading, setLoading] = useState<boolean>(true);
 
-	const url = `https://6653697c1c6af63f4674a111.mockapi.io/api/users/${getWithExpiry("user")}/todoLists`;
+	const url = `https://6653697c1c6af63f4674a111.mockapi.io/api/users/${getItem("user")}/todoLists`;
 
 	const fetchTodos = () => {
 		fetch(url)
@@ -33,7 +33,7 @@ export default function App() {
 	};
 
 	const logout = () => {
-		localStorage.removeItem("user");
+		removeItem("user");
 		setLoading(true);
 		router.push("/login");
 	};
@@ -64,8 +64,8 @@ export default function App() {
 	};
 
 	useEffect(() => {
-		getWithExpiry("user");
-		if (!getWithExpiry("user")) {
+		getItem("user");
+		if (!getItem("user")) {
 			router.push("/login");
 		}
 		fetchTodos();

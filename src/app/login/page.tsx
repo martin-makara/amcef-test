@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { getWithExpiry, setWithExpiry } from "../components/functions";
+import { getItem, setWithExpiry } from "../components/functions";
 
 type Inputs = {
 	mail: string;
@@ -47,8 +47,8 @@ export default function Login() {
 	};
 
 	useEffect(() => {
-		getWithExpiry("user");
-		if (getWithExpiry("user")) {
+		getItem("user");
+		if (getItem("user")) {
 			router.push("/");
 		}
 	}, []);
@@ -57,7 +57,7 @@ export default function Login() {
 		<main className="flex min-h-screen flex-col justify-between items-center p-8">
 			<div className="flex w-full justify-between items-center">
 				<div className="w-full"></div>
-				<h1 className="w-full text-center text-4xl">Todo List123</h1>
+				<h1 className="w-full text-center text-4xl">Todo List</h1>
 				<div className="text-end w-full">
 					<Link href="/register">Register</Link>
 				</div>

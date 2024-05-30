@@ -37,9 +37,9 @@ export default function Login() {
 		})
 			.then((response) => response.json())
 			.then((response: any) => {
-				if (response.status === 404 || response.length === 0) {
+				if (response === "Not found") {
 					alert("This email is not registered!");
-				} else if (response.status === 200 || response.length > 0) {
+				} else {
 					loginUser(response[0].id);
 				}
 			})
@@ -54,14 +54,16 @@ export default function Login() {
 	}, []);
 
 	return (
-		<div>
-			<h1>Login</h1>
-			<Link href="/register">Register</Link>
+		<main className="flex min-h-screen flex-col justify-between items-center p-8">
+			<div className="flex w-full justify-between items-center">
+				<div className="w-full"></div>
+				<h1 className="w-full text-center text-4xl">Todo List</h1>
+				<div className="text-end w-full">
+					<Link href="/register">Register</Link>
+				</div>
+			</div>
 			<form className="menu" onSubmit={handleSubmit(onSubmit)}>
-				<label
-					className="input input-bordered flex items-center gap-2"
-					style={errors.mail ? { borderColor: "red" } : {}}
-				>
+				<label className={"input input-bordered flex items-center gap-2 mb-2" + (errors.mail ? " border-error" : "")}>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						viewBox="0 0 16 16"
@@ -83,8 +85,7 @@ export default function Login() {
 					/>
 				</label>
 				<label
-					className="input input-bordered flex items-center gap-2"
-					style={errors.password ? { borderColor: "red" } : {}}
+					className={"input input-bordered flex items-center gap-2 mb-2" + (errors.password ? " border-error" : "")}
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -105,9 +106,11 @@ export default function Login() {
 						{...register("password", { required: true, minLength: 8 })}
 					/>
 				</label>
-				{(errors.mail || errors.password) && <span>These fields is required!</span>}
-				<input className="input" type="submit" />
+				<button className="btn" type="submit">
+					Login
+				</button>
 			</form>
-		</div>
+			<div></div>
+		</main>
 	);
 }

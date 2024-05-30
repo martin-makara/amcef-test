@@ -51,9 +51,9 @@ export default function Register() {
 		})
 			.then((response) => response.json())
 			.then((response: any) => {
-				if (response.status === 404 || response.length === 0) {
+				if (response === "Not found") {
 					registerUser(data);
-				} else if (response.status === 200 || response.length > 0) {
+				} else {
 					alert("This email is already registered!");
 				}
 			})
@@ -68,14 +68,16 @@ export default function Register() {
 	}, []);
 
 	return (
-		<div>
-			<h1>Regsiter</h1>
-			<Link href="/login">Login</Link>
+		<main className="flex min-h-screen flex-col justify-between items-center p-8">
+			<div className="flex w-full justify-between items-center">
+				<div className="w-full"></div>
+				<h1 className="w-full text-center text-4xl">Todo List</h1>
+				<div className="text-end w-full">
+					<Link href="/login">Login</Link>
+				</div>
+			</div>
 			<form className="menu" onSubmit={handleSubmit(onSubmit)}>
-				<label
-					className="input input-bordered flex items-center gap-2"
-					style={errors.mail ? { borderColor: "red" } : {}}
-				>
+				<label className={"input input-bordered flex items-center gap-2 mb-2" + (errors.mail ? " border-error" : "")}>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						viewBox="0 0 16 16"
@@ -96,10 +98,7 @@ export default function Register() {
 						})}
 					/>
 				</label>
-				<label
-					className="input input-bordered flex items-center gap-2"
-					style={errors.name ? { borderColor: "red" } : {}}
-				>
+				<label className={"input input-bordered flex items-center gap-2 mb-2" + (errors.name ? " border-error" : "")}>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						viewBox="0 0 16 16"
@@ -116,8 +115,7 @@ export default function Register() {
 					/>
 				</label>
 				<label
-					className="input input-bordered flex items-center gap-2"
-					style={errors.password ? { borderColor: "red" } : {}}
+					className={"input input-bordered flex items-center gap-2 mb-2" + (errors.password ? " border-error" : "")}
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -138,9 +136,11 @@ export default function Register() {
 						{...register("password", { required: true, minLength: 8 })}
 					/>
 				</label>
-				{(errors.mail || errors.name || errors.password) && <span>These fields is required!</span>}
-				<input className="input" type="submit" />
+				<button className="btn" type="submit">
+					Register
+				</button>
 			</form>
-		</div>
+			<div></div>
+		</main>
 	);
 }

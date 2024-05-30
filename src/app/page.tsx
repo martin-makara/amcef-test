@@ -20,6 +20,12 @@ export default function App() {
 	const [todos, setTodos] = useState<any[]>([]); // Add type annotation for todos
 	const [loading, setLoading] = useState<boolean>(true);
 
+	const logout = () => {
+		localStorage.removeItem("user");
+		setLoading(true);
+		router.push("/login");
+	};
+
 	const onSubmit = (data: FormValues) => {
 		const date = new Date();
 		data.createdAt = date.toLocaleString();
@@ -78,14 +84,7 @@ export default function App() {
 					</div>
 					<h1 className="w-full text-center text-4xl">Todo List</h1>
 					<div className="flex justify-end w-full">
-						<button
-							className="btn btn-primary"
-							onClick={() => {
-								localStorage.removeItem("user");
-								setLoading(true);
-								router.push("/login");
-							}}
-						>
+						<button className="btn btn-primary" onClick={() => logout()}>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								width="20"

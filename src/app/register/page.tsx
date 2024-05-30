@@ -51,7 +51,8 @@ export default function Register() {
 		})
 			.then((response) => response.json())
 			.then((response: any) => {
-				if (response === "Not found") {
+				console.log(response);
+				if (response === "Not found" || response.length === 0) {
 					registerUser(data);
 				} else {
 					alert("This email is already registered!");

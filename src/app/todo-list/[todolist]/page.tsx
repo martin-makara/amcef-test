@@ -21,6 +21,7 @@ export default function Todolist({ params }: { params: { todolist: string } }) {
 		handleSubmit,
 	} = useForm<FormValues>();
 	const [todoItems, setTodoItems] = useState<any[]>([]); // Add type annotation for todos
+	const [tmpTodoItems, setTmpTodoItems] = useState<any[]>([]); // Add type annotation for todos
 	const [loading, setLoading] = useState<boolean>(true);
 
 	const onSubmit = (data: FormValues) => {
@@ -75,6 +76,25 @@ export default function Todolist({ params }: { params: { todolist: string } }) {
 			.catch((error) => console.error(error));
 	};
 
+	const showAll = () => {
+		setTmpTodoItems(todoItems);
+	};
+
+	const showActive = () => {
+		setTmpTodoItems(todoItems.filter((item) => item.state === "0"));
+		console.log(tmpTodoItems);
+	};
+
+	const showCompleted = () => {
+		setTmpTodoItems(todoItems.filter((item) => item.state === "1"));
+		console.log(tmpTodoItems);
+	};
+
+	const showExpired = () => {
+		setTmpTodoItems(todoItems.filter((item) => item.state === "2"));
+		console.log(tmpTodoItems);
+	};
+
 	useEffect(() => {
 		getWithExpiry("user");
 		if (!getWithExpiry("user")) {
@@ -96,10 +116,11 @@ export default function Todolist({ params }: { params: { todolist: string } }) {
 					return a.state - b.state;
 				});
 				setTodoItems(responseData);
+				setTmpTodoItems(responseData);
 				setLoading(false);
 			})
 			.catch((error) => console.error(error));
-	}, [todoItems, loading]);
+	}, [loading]);
 
 	if (loading === true) {
 		return (
@@ -160,7 +181,39 @@ export default function Todolist({ params }: { params: { todolist: string } }) {
 										<th>Name</th>
 										<th>Description</th>
 										<th>State</th>
-										<th></th>
+										<th>
+											<input
+												className="input"
+												type="text"
+												placeholder="Search title"
+												onChange={(e) => {
+													const searchValue = e.target.value.toLowerCase();
+													const filteredItems = todoItems.filter((item) =>
+														item.title.toLowerCase().includes(searchValue)
+													);
+													setTmpTodoItems(filteredItems);
+												}}
+											/>
+											<select
+												className="select select-bordered"
+												onChange={(selectedOption) => {
+													if (selectedOption.target.value === "Show all") {
+														showAll();
+													} else if (selectedOption.target.value === "Active") {
+														showActive();
+													} else if (selectedOption.target.value === "Completed") {
+														showCompleted();
+													} else {
+														showExpired();
+													}
+												}}
+											>
+												<option selected>Show all</option>
+												<option>Active</option>
+												<option>Completed</option>
+												<option>Expired</option>
+											</select>
+										</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -190,7 +243,7 @@ export default function Todolist({ params }: { params: { todolist: string } }) {
 												placeholder="Deadline"
 											/>
 										</th>
-										<th>
+										<th className="flex justify-end">
 											<button type="submit" className="btn btn-primary">
 												<svg
 													xmlns="http://www.w3.org/2000/svg"
@@ -205,7 +258,7 @@ export default function Todolist({ params }: { params: { todolist: string } }) {
 											</button>
 										</th>
 									</tr>
-									{todoItems.map(({ id, title, description, deadline, state }) => (
+									{tmpTodoItems.map(({ id, title, description, deadline, state }) => (
 										<tr className="bg-base-300 hover" key={"key" + id}>
 											<th>
 												<button
@@ -272,7 +325,7 @@ export default function Todolist({ params }: { params: { todolist: string } }) {
 											<th>{title}</th>
 											<th>{description}</th>
 											<th>{state === "1" ? "Completed" : state === "0" ? deadline : "Expired"}</th>
-											<th>
+											<th className="flex justify-end">
 												<button className="btn btn-error" onClick={() => deleteTodo(id)}>
 													<svg
 														xmlns="http://www.w3.org/2000/svg"

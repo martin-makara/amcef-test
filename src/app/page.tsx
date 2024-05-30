@@ -57,7 +57,7 @@ export default function App() {
 				setLoading(false);
 			})
 			.catch((error) => console.error(error));
-	}, [todos, loading]);
+	}, [loading]);
 
 	if (loading === true) {
 		return (

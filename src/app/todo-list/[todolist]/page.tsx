@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { getWithExpiry } from "@/app/components/functions";
 
 type FormValues = {
@@ -24,53 +24,62 @@ export default function Todolist({ params }: { params: { todolist: string } }) {
 	const [tmpTodoItems, setTmpTodoItems] = useState<any[]>([]); // Add type annotation for todos
 	const [loading, setLoading] = useState<boolean>(true);
 
+	const url = `https://6653697c1c6af63f4674a111.mockapi.io/api/users/${getWithExpiry("user")}/todoLists/${
+		params.todolist
+	}`;
+
+	const fetchTodoItems = () => {
+		fetch(`${url}/todoItems`)
+			.then((response) => response.json())
+			.then((responseData) => {
+				for (let i = 0; i < responseData.length; i++) {
+					if (responseData[i].state === "0" && new Date(responseData[i].deadline).getTime() < new Date().getTime()) {
+						doneTodo(responseData[i].id, "2");
+					}
+				}
+				setTodoItems(responseData);
+				setTmpTodoItems(responseData);
+				setLoading(false);
+			})
+			.catch((error) => console.error(error));
+	};
+
+	const logout = () => {
+		localStorage.removeItem("user");
+		setLoading(true);
+		router.push("/login");
+	};
+
 	const onSubmit = (data: FormValues) => {
 		const date = new Date();
 		data.createdAt = date.toLocaleString();
 		data.state = "0";
 
-		fetch(
-			`https://6653697c1c6af63f4674a111.mockapi.io/api/users/${getWithExpiry("user")}/todoLists/${
-				params.todolist
-			}/todoItems`,
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(data),
-			}
-		)
+		fetch(`${url}/todoItems`, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify(data),
+		})
 			.then((response) => response.json())
 			.then(() => setLoading(true))
 			.catch((error) => console.error(error));
 	};
 
 	const doneTodo = (id: number, state: string) => {
-		fetch(
-			`https://6653697c1c6af63f4674a111.mockapi.io/api/users/${getWithExpiry("user")}/todoLists/${
-				params.todolist
-			}/todoItems/${id}`,
-			{
-				method: "PUT",
-				headers: { "content-type": "application/json" },
-				body: JSON.stringify({ state: state }),
-			}
-		)
+		fetch(`${url}/todoItems/${id}`, {
+			method: "PUT",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ state: state }),
+		})
 			.then((response) => response.json())
 			.then(() => setLoading(true))
 			.catch((error) => console.error(error));
 	};
 
 	const deleteTodo = (id: number) => {
-		fetch(
-			`https://6653697c1c6af63f4674a111.mockapi.io/api/users/${getWithExpiry("user")}/todoLists/${
-				params.todolist
-			}/todoItems/${id}`,
-			{
-				method: "DELETE",
-			}
-		)
+		fetch(`${url}/todoItems/${id}`, {
+			method: "DELETE",
+		})
 			.then((response) => response.json())
 			.then(() => setLoading(true))
 			.catch((error) => console.error(error));
@@ -82,44 +91,21 @@ export default function Todolist({ params }: { params: { todolist: string } }) {
 
 	const showActive = () => {
 		setTmpTodoItems(todoItems.filter((item) => item.state === "0"));
-		console.log(tmpTodoItems);
 	};
 
 	const showCompleted = () => {
 		setTmpTodoItems(todoItems.filter((item) => item.state === "1"));
-		console.log(tmpTodoItems);
 	};
 
 	const showExpired = () => {
 		setTmpTodoItems(todoItems.filter((item) => item.state === "2"));
-		console.log(tmpTodoItems);
 	};
-
 	useEffect(() => {
 		getWithExpiry("user");
 		if (!getWithExpiry("user")) {
 			router.push("/login");
 		}
-		fetch(
-			`https://6653697c1c6af63f4674a111.mockapi.io/api/users/${getWithExpiry("user")}/todoLists/${
-				params.todolist
-			}/todoItems`
-		)
-			.then((response) => response.json())
-			.then((responseData) => {
-				for (let i = 0; i < responseData.length; i++) {
-					if (responseData[i].state === "0" && new Date(responseData[i].deadline).getTime() < new Date().getTime()) {
-						doneTodo(responseData[i].id, "2");
-					}
-				}
-				responseData.sort((a: any, b: any) => {
-					return a.state - b.state;
-				});
-				setTodoItems(responseData);
-				setTmpTodoItems(responseData);
-				setLoading(false);
-			})
-			.catch((error) => console.error(error));
+		fetchTodoItems();
 	}, [loading]);
 
 	if (loading === true) {
@@ -143,19 +129,13 @@ export default function Todolist({ params }: { params: { todolist: string } }) {
 						</ul>
 					</div>
 					<h1 className="w-full text-center text-4xl">Todo List</h1>
-					<div className="flex flex-col items-end w-full">
-						<button
-							className="btn btn-primary"
-							onClick={() => {
-								localStorage.removeItem("user");
-								router.push("/login");
-							}}
-						>
+					<div className="flex justify-end w-full">
+						<button className="btn btn-primary" onClick={() => logout()}>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								width="20"
 								height="20"
-								fill="currentColor"
+								fill="white"
 								className="bi bi-box-arrow-right"
 								viewBox="0 0 16 16"
 							>
@@ -270,7 +250,7 @@ export default function Todolist({ params }: { params: { todolist: string } }) {
 														(state === "2" ? " btn-warning" : "")
 													}
 													onClick={
-														new Date(deadline).getTime() < new Date().getTime()
+														Number(new Date(deadline).getTime()) < Number(new Date().getTime())
 															? () => {
 																	const alertElement = document.getElementById("alert");
 																	if (alertElement) {
@@ -324,7 +304,7 @@ export default function Todolist({ params }: { params: { todolist: string } }) {
 											</th>
 											<th>{title}</th>
 											<th>{description}</th>
-											<th>{state === "1" ? "Completed" : state === "0" ? deadline : "Expired"}</th>
+											<th>{state === "0" ? deadline : state === "1" ? "Completed" : "Expired"}</th>
 											<th className="flex justify-end">
 												<button className="btn btn-error" onClick={() => deleteTodo(id)}>
 													<svg

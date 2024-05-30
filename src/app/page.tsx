@@ -20,6 +20,18 @@ export default function App() {
 	const [todos, setTodos] = useState<any[]>([]); // Add type annotation for todos
 	const [loading, setLoading] = useState<boolean>(true);
 
+	const url = `https://6653697c1c6af63f4674a111.mockapi.io/api/users/${getWithExpiry("user")}/todoLists`;
+
+	const fetchTodos = () => {
+		fetch(url)
+			.then((response) => response.json())
+			.then((responseData) => {
+				setTodos(responseData);
+				setLoading(false);
+			})
+			.catch((error) => console.error(error));
+	};
+
 	const logout = () => {
 		localStorage.removeItem("user");
 		setLoading(true);
@@ -30,7 +42,7 @@ export default function App() {
 		const date = new Date();
 		data.createdAt = date.toLocaleString();
 
-		fetch(`https://6653697c1c6af63f4674a111.mockapi.io/api/users/${getWithExpiry("user")}/todoLists`, {
+		fetch(url, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -43,7 +55,7 @@ export default function App() {
 	};
 
 	const deleteTodo = (id: number) => {
-		fetch(`https://6653697c1c6af63f4674a111.mockapi.io/api/users/${getWithExpiry("user")}/todoLists/${id}`, {
+		fetch(`${url}/${id}`, {
 			method: "DELETE",
 		})
 			.then((response) => response.json())
@@ -56,13 +68,7 @@ export default function App() {
 		if (!getWithExpiry("user")) {
 			router.push("/login");
 		}
-		fetch(`https://6653697c1c6af63f4674a111.mockapi.io/api/users/${getWithExpiry("user")}/todoLists`)
-			.then((response) => response.json())
-			.then((responseData) => {
-				setTodos(responseData);
-				setLoading(false);
-			})
-			.catch((error) => console.error(error));
+		fetchTodos();
 	}, [loading]);
 
 	if (loading === true) {

@@ -106,6 +106,7 @@ export default function Login() {
 						{...register("password", { required: true, minLength: 8 })}
 					/>
 				</label>
+				{errors.password && <span>Minimum length of 8 symbols</span>}
 				<button className="btn" type="submit">
 					Login
 				</button>

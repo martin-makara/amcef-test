@@ -106,7 +106,7 @@ export default function App() {
 				<div className="flex flex-col w-1/2 mt-20">
 					<div className="overflow-x-auto">
 						<table className="table">
-							<thead>
+							<thead className="bg-base-300">
 								<tr className="bg-base-300">
 									<th></th>
 									<th>Name</th>

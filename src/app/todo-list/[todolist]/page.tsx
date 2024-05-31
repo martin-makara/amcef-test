@@ -55,24 +55,34 @@ export default function Todolist({ params }: { params: { todolist: string } }) {
 		data.createdAt = date.toLocaleString();
 		data.state = "0";
 
+		console.log("onSubmit called with data:", data);
+
 		fetch(`${url}/todoItems`, {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify(data),
 		})
 			.then((response) => response.json())
-			.then(() => setLoading(true))
+			.then((data) => {
+				console.log("Response from API:", data);
+				setLoading(true);
+			})
 			.catch((error) => console.error(error));
 	};
 
 	const doneTodo = (id: number, state: string) => {
+		console.log("doneTodo called with id:", id, "and state:", state);
+
 		fetch(`${url}/todoItems/${id}`, {
 			method: "PUT",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({ state: state }),
 		})
 			.then((response) => response.json())
-			.then(() => setLoading(true))
+			.then((data) => {
+				console.log("Response from API:", data);
+				setLoading(true);
+			})
 			.catch((error) => console.error(error));
 	};
 

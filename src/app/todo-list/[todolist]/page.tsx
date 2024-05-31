@@ -104,8 +104,9 @@ export default function Todolist({ params }: { params: { todolist: string } }) {
 		getItem("user");
 		if (!getItem("user")) {
 			router.push("/login");
+		} else {
+			fetchTodoItems();
 		}
-		fetchTodoItems();
 	}, [loading]);
 
 	if (loading === true) {

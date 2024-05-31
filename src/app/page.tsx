@@ -69,8 +69,9 @@ export default function App() {
 		getItem("user");
 		if (!getItem("user")) {
 			router.push("/login");
+		} else {
+			fetchTodos();
 		}
-		fetchTodos();
 	}, [loading]);
 
 	if (loading === true) {

@@ -51,7 +51,6 @@ export default function Register() {
 		})
 			.then((response) => response.json())
 			.then((response: any) => {
-				console.log(response);
 				if (response === "Not found" || response.length === 0) {
 					registerUser(data);
 				} else {

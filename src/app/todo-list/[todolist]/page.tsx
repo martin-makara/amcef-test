@@ -20,8 +20,8 @@ export default function Todolist({ params }: { params: { todolist: string } }) {
 		formState: { errors },
 		handleSubmit,
 	} = useForm<FormValues>();
-	const [todoItems, setTodoItems] = useState<any[]>([]); // Add type annotation for todos
-	const [tmpTodoItems, setTmpTodoItems] = useState<any[]>([]); // Add type annotation for todos
+	const [todoItems, setTodoItems] = useState<any[]>([]);
+	const [tmpTodoItems, setTmpTodoItems] = useState<any[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
 
 	const url = `https://6653697c1c6af63f4674a111.mockapi.io/api/users/${getItem("user")}/todoLists/${params.todolist}`;
@@ -114,8 +114,9 @@ export default function Todolist({ params }: { params: { todolist: string } }) {
 		getItem("user");
 		if (!getItem("user")) {
 			router.push("/login");
+		} else {
+			fetchTodoItems();
 		}
-		fetchTodoItems();
 	}, [loading]);
 
 	if (loading === true) {

@@ -154,7 +154,7 @@ export default function App() {
 											{createdAt}
 										</th>
 										<th className="flex justify-end">
-											<button className="btn btn-error" onClick={() => deleteTodo(id)}>
+											<button type="button" className="btn btn-error" onClick={() => deleteTodo(id)}>
 												<svg
 													xmlns="http://www.w3.org/2000/svg"
 													width="20"

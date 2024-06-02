@@ -21,7 +21,7 @@ export const getItem = (key: string) => {
 
 export const setWithExpiry = (key: string, value: string, ttl: number) => {
 	if (typeof window === "undefined") {
-		return;
+		return null;
 	}
 
 	const now = new Date();

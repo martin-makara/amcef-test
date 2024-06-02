@@ -253,6 +253,7 @@ export default function Todolist({ params }: { params: { todolist: string } }) {
 										<tr className="bg-base-300 hover" key={"key" + id}>
 											<th>
 												<button
+													type="button"
 													id="doneBtn"
 													className={
 														"btn" +
@@ -317,7 +318,7 @@ export default function Todolist({ params }: { params: { todolist: string } }) {
 											<th>{description}</th>
 											<th>{state === "0" ? deadline : state === "1" ? "Completed" : "Expired"}</th>
 											<th className="flex justify-end">
-												<button className="btn btn-error" onClick={() => deleteTodo(id)}>
+												<button type="button" className="btn btn-error" onClick={() => deleteTodo(id)}>
 													<svg
 														xmlns="http://www.w3.org/2000/svg"
 														width="20"
